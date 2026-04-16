@@ -41,10 +41,12 @@ export default function RootLayout({
         "antialiased",
         fontMono.variable,
         "font-sans",
-        fontSans.variable
+        fontSans.variable,
+        "h-full",
+        "m-0"
       )}
     >
-      <body className="min-h-svh">
+      <body className="m-0 flex h-full flex-col">
         <ThemeProvider>
           <LayoutControls />
           {children}

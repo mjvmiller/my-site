@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { Moon, Plus, Sun, X, Send } from "lucide-react"
 import { useTheme } from "next-themes"
@@ -21,7 +22,7 @@ import {
 } from "@/components/ui/tooltip"
 
 const socialButtonClassName =
-  "shadow-sm backdrop-blur-sm hover:bg-accent hover:text-accent-foreground"
+  "shadow-sm backdrop-blur-sm hover:bg-accent hover:text-accent-foreground border-transparent"
 const socialIconClassName =
   "size-5 fill-foreground transition-colors group-hover/button:fill-accent-foreground"
 const githubIconClassName = socialIconClassName
@@ -48,8 +49,10 @@ const externalLinks = [
 ]
 
 export function LayoutControls() {
+  const pathname = usePathname()
   const { resolvedTheme, setTheme } = useTheme()
   const [isLinksOpen, setIsLinksOpen] = useState(false)
+  const showThemeToggle = pathname !== "/"
 
   function toggleTheme() {
     setTheme(resolvedTheme === "dark" ? "light" : "dark")
@@ -136,26 +139,28 @@ export function LayoutControls() {
         </CollapsibleContent>
       </Collapsible>
 
-      <div className="fixed right-10 bottom-10 z-50">
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <Button
-                variant="outline"
-                size="icon-lg"
-                className={`relative ${socialButtonClassName}`}
-                onClick={toggleTheme}
-                aria-label="Toggle theme"
-              />
-            }
-          >
-            <Sun className="size-5 dark:scale-100 dark:rotate-0 transition-all scale-0 -rotate-90" />
-            <Moon className="absolute size-5 dark:scale-0 dark:rotate-90 transition-all scale-100 rotate-0" />
-            <span className="sr-only">Toggle theme</span>
-          </TooltipTrigger>
-          <TooltipContent side="left">Toggle theme</TooltipContent>
-        </Tooltip>
-      </div>
+      {showThemeToggle ? (
+        <div className="fixed right-10 bottom-10 z-50">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size="icon-lg"
+                  className={`relative ${socialButtonClassName}`}
+                  onClick={toggleTheme}
+                  aria-label="Toggle theme"
+                />
+              }
+            >
+              <Sun className="size-5 scale-0 -rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+              <Moon className="absolute size-5 scale-100 rotate-0 transition-all dark:scale-0 dark:rotate-90" />
+              <span className="sr-only">Toggle theme</span>
+            </TooltipTrigger>
+            <TooltipContent side="left">Toggle theme</TooltipContent>
+          </Tooltip>
+        </div>
+      ) : null}
     </TooltipProvider>
   )
 }
